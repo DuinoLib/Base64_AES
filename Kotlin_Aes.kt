@@ -9,7 +9,7 @@ import javax.crypto.spec.SecretKeySpec
 val key = hexStringToByteArray("30313233343536373839303130313233")
 
 fun main() {
-    val encrypteddata = "4gsSkki4N6zNcKmKc80JHQjzHtv+/0ej8Cpi0NNaih8="
+    val encrypteddata = "XtO3E8xIqsH475IEvZlcXMxRHbSzNzqlmWAbxiTcG7RMrW3tu0MgNiGjErn+bRfs"
     println(decryptFromBaseEncoded(encrypteddata))
     val enccrypted = encryptToBaseEncoded("Have a nice day 👍😉!!!")
     println(enccrypted)
@@ -26,10 +26,11 @@ fun decryptFromBaseEncoded(encrypted_msg: String): String {
     dcipher.init(Cipher.DECRYPT_MODE, skeySpec, iv)
     val decryptedbytes = dcipher.doFinal(msgbyte)
     //lets remove the padding
-    val padded_byte: Byte = 10// Arduino padded with "10"
+    val padded_byte1: Byte = 10// Arduino padded with "10"
+    val padded_byte2: Byte = 3// Arduino padded with "10"
     for (num in 0 until dcipher.blockSize) {
         val index = decryptedbytes.size - 1 - num
-        if (decryptedbytes[index] == padded_byte) {
+        if (decryptedbytes[index] == padded_byte1||decryptedbytes[index] == padded_byte2) {
             decryptedbytes[index] = 0
         } else {
             break
@@ -64,3 +65,15 @@ fun encryptToBaseEncoded(msg: String): String {
     System.arraycopy(ciphered, 0, cryptedmsg, ivbytes.size, ciphered.size)
     return Base64.getEncoder().encodeToString(cryptedmsg)
 }
+fun hexStringToByteArray(s: String): ByteArray {
+    val len = s.length
+    val data = ByteArray(len / 2)
+    var i = 0
+    while (i < len) {
+        data[i / 2] = ((Character.digit(s[i], 16) shl 4) + Character.digit(s[i + 1], 16)).toByte()
+        i += 2
+    }
+    return data
+}
+
+fun ByteArray.toHexString() = asUByteArray().joinToString("") { it.toString(16).padStart(2, '0') }
