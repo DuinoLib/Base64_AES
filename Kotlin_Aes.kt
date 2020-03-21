@@ -16,27 +16,15 @@ fun main() {
     println(decryptFromBaseEncoded(enccrypted))
 }
 
-fun decryptFromBaseEncoded(encrypted_msg: String): String {
+fun rdecryptFromBaseEncoded(encrypted_msg: String): String {
     val data = Base64.getDecoder().decode(encrypted_msg)
     val ivbyte = Arrays.copyOf(data, 16);
     val msgbyte = Arrays.copyOfRange(data, 16, data.size)
     val iv = IvParameterSpec(ivbyte)
-    val skeySpec = SecretKeySpec(key, "AES")
-    val dcipher = Cipher.getInstance("AES/CBC/NoPadding")
+    val skeySpec = SecretKeySpec(keyg, "AES")
+    val dcipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
     dcipher.init(Cipher.DECRYPT_MODE, skeySpec, iv)
     val decryptedbytes = dcipher.doFinal(msgbyte)
-    //lets remove the padding
-    val padded_byte1: Byte = 10// Arduino padded with "10"
-    val padded_byte2: Byte = 3// Arduino padded with "10"
-    for (num in 0 until dcipher.blockSize) {
-        val index = decryptedbytes.size - 1 - num
-        if (decryptedbytes[index] == padded_byte1||decryptedbytes[index] == padded_byte2) {
-            decryptedbytes[index] = 0
-        } else {
-            break
-        }
-    }
-    ///////////////////////////
     return String(decryptedbytes)
 }
 
