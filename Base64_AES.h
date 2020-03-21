@@ -15,7 +15,7 @@
 class Base64_AES {
   public:
     Base64_AES(uint16_t bit);
-    void decrypt_b64(char * encrypted, int msg_length, char * decrypted_message);
+    boolean decrypt_b64(char * encrypted, int msg_length, char * decrypted_message);
     void encrypt_b64(char * msg, int msg_length, char * encrypted_b64_message);
     int expected_encrypted_b64_len(int msg_length);
     int expected_decrypted_b64_len(int msg_length);
