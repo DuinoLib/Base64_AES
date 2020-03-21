@@ -10,11 +10,19 @@ void Base64_AES::setkey(byte *mykey) {
 }
 
 int Base64_AES::expected_encrypted_b64_len(int msg_length) {
-  return base64_encode_expected_len ((msg_length + N_BLOCK - msg_length % N_BLOCK) + N_BLOCK);// this additional "N_BLOCK" is for adding iv key.
+  int len = base64_encode_expected_len ((msg_length + N_BLOCK - msg_length % N_BLOCK) + N_BLOCK);// this additional "N_BLOCK" is for adding iv key.
+  if (len < 0) {
+    return 0;
+  }
+  return len;
 }
 
 int Base64_AES::expected_decrypted_b64_len(int msg_length) {
-  return base64_decode_expected_len(msg_length) - N_BLOCK;
+  int len = base64_decode_expected_len(msg_length) - N_BLOCK;
+  if (len < 0) {
+    return 0;
+  }
+  return len;
 }
 
 void Base64_AES::encrypt_b64(char * msg, int msg_length, char * encrypted_b64_message) {
@@ -78,13 +86,13 @@ void Base64_AES::encrypt_b64(char * msg, int msg_length, char * encrypted_b64_me
 }
 
 
-void Base64_AES::decrypt_b64(char * encrypted, int msg_length, char * decrypted_message) {
+boolean Base64_AES::decrypt_b64(char * encrypted, int msg_length, char * decrypted_message) {
   /**
      convert the base64 encoded message to byte array
   */
   int expected_decode_length = base64_decode_expected_len(msg_length);
-  if(expected_decode_length<32){
-  	return;
+  if (expected_decode_length < 32) {
+    return false;
   }
   char *decoded = new char[expected_decode_length];
   base64_decode_chars(encrypted, msg_length, decoded);
@@ -120,5 +128,6 @@ void Base64_AES::decrypt_b64(char * encrypted, int msg_length, char * decrypted_
   delete decrypted_bytes;
   delete decoded;
   delete ecrypted_bytes;
+  return true;
 
 }
