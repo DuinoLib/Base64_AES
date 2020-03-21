@@ -83,7 +83,7 @@ void Base64_AES::decrypt_b64(char * encrypted, int msg_length, char * decrypted_
      convert the base64 encoded message to byte array
   */
   int expected_decode_length = base64_decode_expected_len(msg_length);
-  if(msg_length<expected_decode_length){
+  if(expected_decode_length<32){
   	return;
   }
   char *decoded = new char[expected_decode_length];
