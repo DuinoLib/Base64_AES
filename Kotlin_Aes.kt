@@ -6,10 +6,10 @@ import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
-val key = hexStringToByteArray("30313233343536373839303130313233")
+val key = "12345678123456781234567812345678".toByteArray()
 
 fun main() {
-    val encrypteddata = "XtO3E8xIqsH475IEvZlcXMxRHbSzNzqlmWAbxiTcG7RMrW3tu0MgNiGjErn+bRfs"
+    val encrypteddata = "03cPL8GOWP2/aISD5S7dRJrVYOHK3bFWAo4vV7nt51Y="
     println(decryptFromBaseEncoded(encrypteddata))
     val enccrypted = encryptToBaseEncoded("Have a nice day 👍😉!!!")
     println(enccrypted)
